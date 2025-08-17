@@ -1,39 +1,50 @@
+<%# app/views/posts/show.html.erb %>
+<%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
 <p style="color: green"><%= notice %></p>
 
-<%= render @post %>
-
-<div>
-  <hr>
-  <h3>Comments</h3>
-  <%# Display all comments for this post %>
-  <% @post.comments.each do |comment| %>
-    <p>
-      <strong><%= comment.author %>:</strong>
-      <%= comment.body %>
-    </p>
-  <% end %>
+<div class="max-w-3xl mx-auto p-8">
+  <%# This is the post's content %>
+  <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+    <h1 class="text-3xl font-bold mb-2"><%= @post.title %></h1>
+    <p class="text-gray-700"><%= @post.body %></p>
+  </div>
 
   <hr>
 
-  <h3>Add a comment:</h3>
-  <%# The form to create a new comment %>
-  <%= form_with(model: [ @post, @post.comments.build ], local: true) do |form| %>
-    <p>
-      <%= form.label :author %><br>
-      <%= form.text_field :author %>
-    </p>
-    <p>
-      <%= form.label :body %><br>
-      <%= form.text_area :body %>
-    </p>
-    <p>
-      <%= form.submit %>
-    </p>
+  <h3 class="text-xl font-semibold mb-4">Comments</h3>
+
+  <%# The Turbo Frame wraps the list and the form %>
+  <%= turbo_frame_tag "comments_section" do %>
+    <%# Display all comments %>
+    <% @post.comments.each do |comment| %>
+      <div class="bg-gray-100 p-3 rounded-lg mb-2">
+        <p><strong><%= comment.author %>:</strong> <%= comment.body %></p>
+      </div>
+    <% end %>
+
+    <hr>
+
+    <h3 class="text-xl font-semibold mt-6 mb-4">Add a comment:</h3>
+    <%# The form to create a new comment. Note: local: true is GONE. %>
+    <%= form_with(model: [ @post, @post.comments.build ], class: "mt-4") do |form| %>
+      <div class="mb-4">
+        <%= form.label :author, class: "block text-gray-700 font-bold mb-2" %>
+        <%= form.text_field :author, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      </div>
+      <div class="mb-4">
+        <%= form.label :body, class: "block text-gray-700 font-bold mb-2" %>
+        <%= form.text_area :body, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      </div>
+      <div>
+        <%= form.submit "Post Comment", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer" %>
+      </div>
+    <% end %>
   <% end %>
 
-  <%= link_to "Edit this post", edit_post_path(@post) %> |
-  <%= link_to "Back to posts", posts_path %>
+  <%# Links outside the frame %>
+  <div class="mt-6">
+    <%= link_to "Edit this post", edit_post_path(@post), class: "text-blue-500 hover:underline" %> |
+    <%= link_to "Back to posts", posts_path, class: "text-blue-500 hover:underline" %>
+  </div>
 
-  <%= button_to "Destroy this post", @post, method: :delete %>
 </div>
-

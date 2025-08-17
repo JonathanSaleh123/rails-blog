@@ -1,16 +1,37 @@
-<p style="color: green"><%= notice %></p>
+<%# The main container centers the content and adds padding %>
+<div class="max-w-4xl mx-auto p-8">
 
-<% content_for :title, "Posts" %>
-
-<h1>Posts</h1>
-
-<div id="posts">
-  <% @posts.each do |post| %>
-    <%= render post %>
-    <p>
-      <%= link_to "Show this post", post %>
+  <%# Display the green notice bar if it exists %>
+  <% if notice %>
+    <p class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-5" role="alert">
+      <%= notice %>
     </p>
   <% end %>
-</div>
 
-<%= link_to "New post", new_post_path %>
+  <%# Page header with a title and the "New Post" button %>
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-4xl font-bold">All Posts</h1>
+    <%= link_to "New post", new_post_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+
+  <%# A container for all the post cards %>
+  <div id="posts">
+    <% @posts.each do |post| %>
+      <%# This is the "card" for a single post %>
+      <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <%# Post title, which is also a link to the post's page %>
+        <h2 class="text-2xl font-bold mb-2">
+          <%= link_to post.title, post, class: "text-gray-900 hover:text-blue-600" %>
+        </h2>
+
+        <%# Show a truncated summary of the post body %>
+        <p class="text-gray-700 mb-4">
+          <%= truncate(post.body, length: 150) %>
+        </p>
+
+        <%# A "Read More" link to the post's page %>
+        <%= link_to "Read more →", post, class: "text-blue-500 hover:underline font-semibold" %>
+      </div>
+    <% end %>
+  </div>
+</div>
